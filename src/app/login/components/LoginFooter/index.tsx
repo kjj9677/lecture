@@ -7,14 +7,12 @@ import styles from "./LoginFooter.module.css";
 export default function LoginFooter() {
   const router = useRouter();
 
-  const handleSignupClick = () => {
-    router.push("/signup");
-  };
+  const handleSignupClick = () => router.push("/signup");
 
   return (
     <footer className={styles.signupSection}>
       <Text type="BODY_2" color="secondary" className={styles.signupText}>
-        아이디가 없으신가요?
+        아직 아이디가 없으신가요?
       </Text>
       <Text
         type="BODY_2"

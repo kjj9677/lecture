@@ -1,8 +1,34 @@
-import { useState } from "react";
+"use client";
+
+import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Text, Button, Input } from "@/components/base";
+import { Button } from "@/components/base";
 import { authApi } from "@/data/mockApi";
+import { useAuth } from "@/hooks/useAuth";
+import LoginFormField from "../LoginFormField";
 import styles from "./LoginForm.module.css";
+
+const DEFAULT_LOGIN_INPUTS = {
+  email: "",
+  password: "",
+};
+
+const FORM_FIELDS = [
+  {
+    name: "email" as const,
+    label: "아이디",
+    type: "email",
+    placeholder: "이메일을 입력해주세요",
+    ariaLabel: "이메일 입력",
+  },
+  {
+    name: "password" as const,
+    label: "비밀번호",
+    type: "password",
+    placeholder: "비밀번호를 입력해주세요",
+    ariaLabel: "비밀번호 입력",
+  },
+];
 
 interface LoginFormProps {
   onLoadingChange: (isLoading: boolean) => void;
@@ -10,23 +36,23 @@ interface LoginFormProps {
 
 export default function LoginForm({ onLoadingChange }: LoginFormProps) {
   const router = useRouter();
-  const [loginForm, setLoginForm] = useState({
-    email: "",
-    password: "",
-  });
+  const { login } = useAuth();
+  const [loginInputs, setLoginInputs] = useState(() => DEFAULT_LOGIN_INPUTS);
 
-  const handleInputChange = (field: string) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setLoginForm(prev => ({
-      ...prev,
-      [field]: event.target.value,
-    }));
-  };
+  const handleInputChange =
+    (field: keyof typeof DEFAULT_LOGIN_INPUTS) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setLoginInputs((prev) => ({
+        ...prev,
+        [field]: event.target.value,
+      }));
+    };
 
-  const handleLogin = async () => {
-    if (!loginForm.email.trim() || !loginForm.password.trim()) {
-      alert('이메일과 비밀번호를 입력해주세요.');
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!loginInputs.email.trim() || !loginInputs.password.trim()) {
+      alert("이메일과 비밀번호를 입력해주세요.");
       return;
     }
 
@@ -34,62 +60,47 @@ export default function LoginForm({ onLoadingChange }: LoginFormProps) {
 
     try {
       const response = await authApi.login({
-        email: loginForm.email,
-        password: loginForm.password,
+        email: loginInputs.email,
+        password: loginInputs.password,
       });
 
-      if (response.success) {
-        router.push('/lectures');
+      if (response.success && response.data) {
+        login(response.data);
+        router.push("/lectures");
       } else {
-        alert(response.message || '로그인에 실패했습니다.');
+        alert(response.message || "로그인에 실패했습니다.");
       }
     } catch (error) {
-      alert('로그인 중 오류가 발생했습니다.');
-      console.error('Login error:', error);
+      alert("로그인 중 오류가 발생했습니다.");
     } finally {
       onLoadingChange(false);
     }
   };
 
   return (
-    <main className={styles.loginForm}>
-      <div className={styles.inputGroup}>
-        <Text type="BODY_2" color="neutral" className={styles.label}>
-          아이디
-        </Text>
-        <Input
-          type="email"
-          placeholder="이메일을 입력해주세요"
-          value={loginForm.email}
-          onChange={handleInputChange("email")}
-          ariaLabel="이메일 입력"
+    <form className={styles.loginForm} onSubmit={handleSubmit}>
+      {FORM_FIELDS.map((field) => (
+        <LoginFormField
+          key={field.name}
+          label={field.label}
+          type={field.type}
+          placeholder={field.placeholder}
+          value={loginInputs[field.name]}
+          onChange={handleInputChange(field.name)}
+          ariaLabel={field.ariaLabel}
           required
         />
-      </div>
-
-      <div className={styles.inputGroup}>
-        <Text type="BODY_2" color="neutral" className={styles.label}>
-          비밀번호
-        </Text>
-        <Input
-          type="password"
-          placeholder="비밀번호를 입력해주세요"
-          value={loginForm.password}
-          onChange={handleInputChange("password")}
-          ariaLabel="비밀번호 입력"
-          required
-        />
-      </div>
+      ))}
 
       <Button
         variant="primary"
         size="large"
-        onClick={handleLogin}
+        type="submit"
         className={styles.loginButton}
         ariaLabel="로그인"
       >
         로그인
       </Button>
-    </main>
+    </form>
   );
 }

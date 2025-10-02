@@ -6,16 +6,16 @@ import { initializeMockData } from "@/data/initialData";
 import { LoginHeader, LoginForm, LoginFooter } from "./components";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLogInLoading, setIsLogInLoading] = useState(false);
 
   useEffect(() => {
     initializeMockData();
   }, []);
 
   return (
-    <PageContainer isLoading={isLoading}>
+    <PageContainer isLoading={isLogInLoading}>
       <LoginHeader />
-      <LoginForm onLoadingChange={setIsLoading} />
+      <LoginForm onLoadingChange={setIsLogInLoading} />
       <LoginFooter />
     </PageContainer>
   );
