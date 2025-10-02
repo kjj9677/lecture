@@ -1,0 +1,46 @@
+.loginSection {
+  text-align: center;
+  padding: 20px 0;
+  border-top: 1px solid #e5e7eb;
+  margin-top: auto;
+}
+
+.loginText {
+  margin-bottom: 12px;
+}
+
+.loginLink {
+  color: #2563eb;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.loginLink:hover {
+  color: #1d4ed8;
+}
+
+.loginLink:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (max-width: 640px) {
+  .loginSection {
+    padding: 16px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loginLink {
+    transition: none;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .loginSection {
+    border-top-width: 2px;
+    border-top-color: #000000;
+  }
+}
