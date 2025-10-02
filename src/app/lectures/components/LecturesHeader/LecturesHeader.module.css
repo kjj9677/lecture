@@ -1,0 +1,84 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.titleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.countText {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.sortSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sortLabel {
+  font-size: 14px;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.sortSelect {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: white;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  min-width: 100px;
+}
+
+.sortSelect:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-color: #2563eb;
+}
+
+.sortSelect:hover {
+  border-color: #9ca3af;
+}
+
+@media (max-width: 640px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+  }
+
+  .sortSection {
+    align-self: flex-end;
+  }
+
+  .sortSelect {
+    min-width: 90px;
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .header {
+    border-bottom-width: 2px;
+    border-bottom-color: #000000;
+  }
+
+  .sortSelect {
+    border-width: 2px;
+    border-color: #000000;
+  }
+}

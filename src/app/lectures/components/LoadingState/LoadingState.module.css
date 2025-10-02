@@ -1,0 +1,144 @@
+.container {
+  width: 100%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 80px;
+}
+
+.skeletonCard {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 150px;
+  position: relative;
+}
+
+.skeletonHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 80px;
+}
+
+.skeletonTitle {
+  height: 20px;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  width: 85%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeletonInstructor {
+  height: 16px;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  width: 40%;
+  animation: pulse 1.5s ease-in-out infinite;
+  animation-delay: 0.1s;
+}
+
+.skeletonCheckbox {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 18px;
+  height: 18px;
+  background-color: #f3f4f6;
+  border-radius: 3px;
+  animation: pulse 1.5s ease-in-out infinite;
+  animation-delay: 0.4s;
+}
+
+.skeletonPrice {
+  position: absolute;
+  top: 40px;
+  right: 12px;
+  height: 16px;
+  width: 60px;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  animation: pulse 1.5s ease-in-out infinite;
+  animation-delay: 0.3s;
+}
+
+.skeletonEnrollment {
+  height: 14px;
+  width: 35%;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  animation: pulse 1.5s ease-in-out infinite;
+  animation-delay: 0.2s;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 70px;
+  }
+
+  .skeletonCard {
+    padding: 14px;
+    height: 140px;
+  }
+
+  .skeletonHeader {
+    padding-right: 70px;
+  }
+
+  .skeletonCheckbox {
+    top: 10px;
+    right: 10px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .skeletonPrice {
+    top: 35px;
+    right: 10px;
+    width: 55px;
+    height: 15px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (min-width: 769px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonTitle,
+  .skeletonInstructor,
+  .skeletonCheckbox,
+  .skeletonPrice,
+  .skeletonEnrollment {
+    animation: none;
+  }
+}
