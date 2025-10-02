@@ -16,7 +16,7 @@ const DEFAULT_LOGIN_INPUTS = {
 const FORM_FIELDS = [
   {
     name: "email" as const,
-    label: "아이디",
+    label: "이메일",
     type: "email" as const,
     placeholder: "이메일을 입력해주세요",
     ariaLabel: "이메일 입력",
