@@ -1,6 +1,7 @@
 "use client";
 
 import { Text, Button, Input } from "@/components/base";
+import { PageContainer } from "@/components/layout";
 import styles from "./page.module.css";
 import { useState } from "react";
 
@@ -28,7 +29,7 @@ export default function Home() {
   };
 
   return (
-    <div className={styles.container}>
+    <PageContainer>
       <header className={styles.header}>
         <Text type="HEADER_1" color="primary" as="h1">
           월급쟁이부자들
@@ -94,6 +95,6 @@ export default function Home() {
           회원가입하기
         </Text>
       </footer>
-    </div>
+    </PageContainer>
   );
 }
