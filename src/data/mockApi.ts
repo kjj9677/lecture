@@ -140,7 +140,7 @@ export const authApi = {
   },
 
   // 로그아웃
-  async logout(): Promise<ApiResponse> {
+  async logout(): Promise<ApiResponse<void>> {
     await delay(100);
     mockStorage.clearCurrentSession();
     return {
@@ -152,6 +152,34 @@ export const authApi = {
   // 현재 세션 확인
   getCurrentSession(): UserSession | null {
     return mockStorage.getCurrentSession();
+  },
+
+  // 이메일 중복 확인
+  async checkEmailDuplicate(email: string): Promise<ApiResponse<{ available: boolean }>> {
+    await delay(200);
+
+    if (!isValidEmail(email)) {
+      return {
+        success: false,
+        message: '올바른 이메일 형식이 아닙니다.',
+      };
+    }
+
+    const existingUser = mockStorage.getUserByEmail(email);
+
+    if (existingUser) {
+      return {
+        success: true,
+        data: { available: false },
+        message: '이미 사용중인 이메일입니다.',
+      };
+    }
+
+    return {
+      success: true,
+      data: { available: true },
+      message: '사용 가능한 이메일입니다.',
+    };
   },
 };
 
@@ -281,7 +309,7 @@ export const lectureApi = {
   },
 
   // 강의 삭제 (강사만, 본인 강의만)
-  async deleteLecture(lectureId: string): Promise<ApiResponse> {
+  async deleteLecture(lectureId: string): Promise<ApiResponse<void>> {
     await delay();
 
     const session = mockStorage.getCurrentSession();
@@ -316,7 +344,7 @@ export const lectureApi = {
   },
 
   // 수강 신청
-  async applyToLecture(lectureId: string): Promise<ApiResponse> {
+  async applyToLecture(lectureId: string): Promise<ApiResponse<void>> {
     await delay();
 
     const session = mockStorage.getCurrentSession();
@@ -358,7 +386,7 @@ export const lectureApi = {
   },
 
   // 수강 신청 취소
-  async cancelApplication(lectureId: string): Promise<ApiResponse> {
+  async cancelApplication(lectureId: string): Promise<ApiResponse<void>> {
     await delay();
 
     const session = mockStorage.getCurrentSession();

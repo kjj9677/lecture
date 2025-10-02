@@ -1,4 +1,4 @@
-import { Text, Input } from "@/components/base";
+import { Text, Input, Button } from "@/components/base";
 import styles from "./FormField.module.css";
 
 interface FormFieldProps {
@@ -10,6 +10,12 @@ interface FormFieldProps {
   error?: string;
   required?: boolean;
   ariaLabel: string;
+  actionButton?: {
+    label: string;
+    onClick: () => void;
+    disabled?: boolean;
+  };
+  successMessage?: string;
 }
 
 export default function FormField({
@@ -21,21 +27,42 @@ export default function FormField({
   error,
   required = false,
   ariaLabel,
+  actionButton,
+  successMessage,
 }: FormFieldProps) {
   return (
     <div className={styles.inputGroup}>
       <Text type="BODY_2" color="neutral" className={styles.label}>
         {label}
       </Text>
-      <Input
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        ariaLabel={ariaLabel}
-        ariaInvalid={!!error}
-        required={required}
-      />
+      <div className={styles.inputWrapper}>
+        <Input
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          ariaLabel={ariaLabel}
+          ariaInvalid={!!error}
+          required={required}
+          className={actionButton ? styles.inputWithButton : ""}
+        />
+        {actionButton && (
+          <Button
+            variant="outline"
+            size="medium"
+            onClick={actionButton.onClick}
+            disabled={actionButton.disabled}
+            className={styles.actionButton}
+          >
+            {actionButton.label}
+          </Button>
+        )}
+      </div>
+      {successMessage && !error && (
+        <Text type="CAPTION" color="success" className={styles.successMessage}>
+          {successMessage}
+        </Text>
+      )}
       <Text type="CAPTION" color="error" className={styles.errorMessage}>
         {error}
       </Text>

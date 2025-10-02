@@ -11,6 +11,22 @@
   margin-bottom: 4px;
 }
 
+.inputWrapper {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.inputWithButton {
+  flex: 1;
+}
+
+.actionButton {
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-width: 80px;
+}
+
 .errorMessage {
   font-size: 12px;
   color: #dc2626;
@@ -18,8 +34,23 @@
   min-height: 16px;
 }
 
+.successMessage {
+  font-size: 12px;
+  color: #10b981;
+  margin-top: 4px;
+}
+
 @media (max-width: 640px) {
   .inputGroup {
     gap: 6px;
+  }
+
+  .inputWrapper {
+    gap: 6px;
+  }
+
+  .actionButton {
+    min-width: 70px;
+    font-size: 13px;
   }
 }

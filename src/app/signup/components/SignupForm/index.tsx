@@ -12,6 +12,7 @@ interface FormErrors {
   email: string;
   phoneNumber: string;
   password: string;
+  passwordConfirm: string;
   userType: string;
 }
 
@@ -28,6 +29,7 @@ const initialErrors: FormErrors = {
   email: "",
   phoneNumber: "",
   password: "",
+  passwordConfirm: "",
   userType: "",
 };
 
@@ -38,7 +40,10 @@ interface SignupFormProps {
 export default function SignupForm({ onLoadingChange }: SignupFormProps) {
   const router = useRouter();
   const [formData, setFormData] = useState<SignupRequest>(initialFormData);
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [errors, setErrors] = useState<FormErrors>(initialErrors);
+  const [emailVerified, setEmailVerified] = useState<boolean | null>(null);
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -63,6 +68,7 @@ export default function SignupForm({ onLoadingChange }: SignupFormProps) {
       email: "",
       phoneNumber: "",
       password: "",
+      passwordConfirm: "",
       userType: "",
     };
 
@@ -74,18 +80,26 @@ export default function SignupForm({ onLoadingChange }: SignupFormProps) {
       newErrors.email = "이메일을 입력해주세요.";
     } else if (!validateEmail(formData.email)) {
       newErrors.email = "올바른 이메일 형식이 아닙니다.";
-    }
-
-    if (!formData.phone.trim()) {
-      newErrors.phoneNumber = "휴대폰 번호를 입력해주세요.";
-    } else if (!validatePhoneNumber(formData.phone)) {
-      newErrors.phoneNumber = "010-0000-0000 형식으로 입력해주세요.";
+    } else if (emailVerified !== true) {
+      newErrors.email = "이메일 중복 확인이 필요합니다.";
     }
 
     if (!formData.password.trim()) {
       newErrors.password = "비밀번호를 입력해주세요.";
     } else if (!validatePassword(formData.password)) {
       newErrors.password = "6-10자의 영문+숫자 조합이어야 합니다.";
+    }
+
+    if (!passwordConfirm.trim()) {
+      newErrors.passwordConfirm = "비밀번호 확인을 입력해주세요.";
+    } else if (formData.password !== passwordConfirm) {
+      newErrors.passwordConfirm = "비밀번호가 일치하지 않습니다.";
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phoneNumber = "휴대폰 번호를 입력해주세요.";
+    } else if (!validatePhoneNumber(formData.phone)) {
+      newErrors.phoneNumber = "010-0000-0000 형식으로 입력해주세요.";
     }
 
     setErrors(newErrors);
@@ -100,6 +114,10 @@ export default function SignupForm({ onLoadingChange }: SignupFormProps) {
         [field]: event.target.value,
       }));
 
+      if (field === "email") {
+        setEmailVerified(null);
+      }
+
       if (errors[field as keyof FormErrors]) {
         setErrors((prev) => ({
           ...prev,
@@ -107,6 +125,56 @@ export default function SignupForm({ onLoadingChange }: SignupFormProps) {
         }));
       }
     };
+
+  const handlePasswordConfirmChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPasswordConfirm(event.target.value);
+
+    if (errors.passwordConfirm) {
+      setErrors((prev) => ({
+        ...prev,
+        passwordConfirm: "",
+      }));
+    }
+  };
+
+  const handleCheckEmail = async () => {
+    if (!formData.email.trim()) {
+      setErrors((prev) => ({
+        ...prev,
+        email: "이메일을 입력해주세요.",
+      }));
+      return;
+    }
+
+    if (!validateEmail(formData.email)) {
+      setErrors((prev) => ({
+        ...prev,
+        email: "올바른 이메일 형식이 아닙니다.",
+      }));
+      return;
+    }
+
+    setIsCheckingEmail(true);
+
+    try {
+      const response = await authApi.checkEmailDuplicate(formData.email);
+
+      if (response.success && response.data) {
+        setEmailVerified(response.data.available);
+        setErrors((prev) => ({
+          ...prev,
+          email: response.data!.available ? "" : response.message || "",
+        }));
+      }
+    } catch (error) {
+      console.error("Email check error:", error);
+      alert("이메일 확인 중 오류가 발생했습니다.");
+    } finally {
+      setIsCheckingEmail(false);
+    }
+  };
 
   const handleUserTypeChange = (userType: "student" | "instructor") => {
     setFormData((prev) => ({
@@ -143,6 +211,13 @@ export default function SignupForm({ onLoadingChange }: SignupFormProps) {
     }
   };
 
+  const getEmailVerificationMessage = () => {
+    if (emailVerified === true) {
+      return "사용 가능한 이메일입니다.";
+    }
+    return "";
+  };
+
   return (
     <main className={styles.signupForm}>
       <FormField
@@ -165,17 +240,12 @@ export default function SignupForm({ onLoadingChange }: SignupFormProps) {
         error={errors.email}
         ariaLabel="이메일 입력"
         required
-      />
-
-      <FormField
-        label="휴대폰 번호"
-        type="tel"
-        placeholder="010-0000-0000"
-        value={formData.phone}
-        onChange={handleInputChange("phone")}
-        error={errors.phoneNumber}
-        ariaLabel="휴대폰 번호 입력"
-        required
+        actionButton={{
+          label: "중복확인",
+          onClick: handleCheckEmail,
+          disabled: isCheckingEmail || !formData.email.trim(),
+        }}
+        successMessage={getEmailVerificationMessage()}
       />
 
       <FormField
@@ -186,6 +256,28 @@ export default function SignupForm({ onLoadingChange }: SignupFormProps) {
         onChange={handleInputChange("password")}
         error={errors.password}
         ariaLabel="비밀번호 입력"
+        required
+      />
+
+      <FormField
+        label="비밀번호 확인"
+        type="password"
+        placeholder="비밀번호를 다시 입력해주세요"
+        value={passwordConfirm}
+        onChange={handlePasswordConfirmChange}
+        error={errors.passwordConfirm}
+        ariaLabel="비밀번호 확인 입력"
+        required
+      />
+
+      <FormField
+        label="휴대폰 번호"
+        type="tel"
+        placeholder="010-0000-0000"
+        value={formData.phone}
+        onChange={handleInputChange("phone")}
+        error={errors.phoneNumber}
+        ariaLabel="휴대폰 번호 입력"
         required
       />
 
