@@ -1,9 +1,9 @@
-import { Text, Input } from "@/components/base";
+import { Text, Input, InputType } from "@/components/base";
 import styles from "./LoginFormField.module.css";
 
 interface LoginFormFieldProps {
   label: string;
-  type: string;
+  type: InputType;
   placeholder: string;
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;

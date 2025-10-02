@@ -6,19 +6,6 @@
   margin-bottom: 40px;
 }
 
-.inputGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 4px;
-}
-
 .loginButton {
   margin-top: 20px;
 }
@@ -27,10 +14,6 @@
   .loginForm {
     gap: 16px;
     margin-bottom: 20px;
-  }
-
-  .inputGroup {
-    gap: 6px;
   }
 
   .loginButton {

@@ -17,14 +17,14 @@ const FORM_FIELDS = [
   {
     name: "email" as const,
     label: "아이디",
-    type: "email",
+    type: "email" as const,
     placeholder: "이메일을 입력해주세요",
     ariaLabel: "이메일 입력",
   },
   {
     name: "password" as const,
     label: "비밀번호",
-    type: "password",
+    type: "password" as const,
     placeholder: "비밀번호를 입력해주세요",
     ariaLabel: "비밀번호 입력",
   },
