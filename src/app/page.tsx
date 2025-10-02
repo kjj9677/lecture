@@ -1,94 +1,98 @@
-import Image from "next/image";
+"use client";
+
+import { Text, Button, Input } from "@/components/base";
 import styles from "./page.module.css";
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [loginForm, setLoginForm] = useState({
+    email: "",
+    password: "",
+  });
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+  const handleInputChange = (field: string) => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setLoginForm(prev => ({
+      ...prev,
+      [field]: event.target.value,
+    }));
+  };
+
+  const handleLogin = () => {
+    console.log("로그인 시도:", loginForm);
+  };
+
+  const handleSignupClick = () => {
+    console.log("회원가입 페이지로 이동");
+  };
+
+  return (
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <Text type="HEADER_1" color="primary" as="h1">
+          월급쟁이부자들
+        </Text>
+        <Text type="BODY_1" color="secondary">
+          강의 플랫폼
+        </Text>
+      </header>
+
+      <main className={styles.loginForm}>
+        <div className={styles.inputGroup}>
+          <Text type="BODY_2" color="neutral" className={styles.label}>
+            아이디
+          </Text>
+          <Input
+            type="email"
+            placeholder="이메일을 입력해주세요"
+            value={loginForm.email}
+            onChange={handleInputChange("email")}
+            ariaLabel="이메일 입력"
+            required
+          />
         </div>
+
+        <div className={styles.inputGroup}>
+          <Text type="BODY_2" color="neutral" className={styles.label}>
+            비밀번호
+          </Text>
+          <Input
+            type="password"
+            placeholder="비밀번호를 입력해주세요"
+            value={loginForm.password}
+            onChange={handleInputChange("password")}
+            ariaLabel="비밀번호 입력"
+            required
+          />
+        </div>
+
+        <Button
+          variant="primary"
+          size="large"
+          onClick={handleLogin}
+          className={styles.loginButton}
+          ariaLabel="로그인"
+        >
+          로그인
+        </Button>
       </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+      <footer className={styles.signupSection}>
+        <Text type="BODY_2" color="secondary" className={styles.signupText}>
+          아이디가 없으신가요?
+        </Text>
+        <Text
+          type="BODY_2"
+          color="primary"
+          className={styles.signupLink}
+          onClick={handleSignupClick}
+          tabIndex={0}
+          ariaLabel="회원가입 페이지로 이동"
+          role="button"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+          회원가입하기
+        </Text>
       </footer>
     </div>
   );
