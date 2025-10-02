@@ -11,36 +11,16 @@ import {
   LectureSortOption
 } from '@/types';
 import { mockStorage } from './mockStorage';
+import { validateEmail, validatePassword } from '@/utils';
 
-// 지연 시뮬레이션 함수 (실제 API 느낌)
 const delay = (ms: number = 300) => new Promise(resolve => setTimeout(resolve, ms));
 
-// 고유 ID 생성 함수
 const generateId = () => Math.random().toString(36).substring(2) + Date.now().toString(36);
 
-// Mock token 생성
 const generateToken = () => 'mock_token_' + Math.random().toString(36).substring(2);
 
-// 비밀번호 검증 (실제로는 해시 비교)
-const validatePassword = (password: string, hashedPassword: string): boolean => {
-  // 실제 프로젝트에서는 bcrypt 등을 사용
+const checkPassword = (password: string, hashedPassword: string): boolean => {
   return password === hashedPassword;
-};
-
-// 이메일 유효성 검사
-const isValidEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
-
-// 비밀번호 유효성 검사 (6자 이상 10자 이하, 영문+숫자 조합)
-const isValidPassword = (password: string): boolean => {
-  if (password.length < 6 || password.length > 10) return false;
-
-  const hasLetter = /[a-zA-Z]/.test(password);
-  const hasNumber = /[0-9]/.test(password);
-
-  return hasLetter && hasNumber;
 };
 
 // 인증 API
@@ -49,7 +29,7 @@ export const authApi = {
   async login(credentials: LoginRequest): Promise<ApiResponse<UserSession>> {
     await delay();
 
-    if (!isValidEmail(credentials.email)) {
+    if (!validateEmail(credentials.email)) {
       return {
         success: false,
         message: '올바른 이메일 형식이 아닙니다.',
@@ -65,7 +45,7 @@ export const authApi = {
       };
     }
 
-    if (!validatePassword(credentials.password, user.password)) {
+    if (!checkPassword(credentials.password, user.password)) {
       return {
         success: false,
         message: '비밀번호가 일치하지 않습니다.',
@@ -91,16 +71,15 @@ export const authApi = {
   async signup(userData: SignupRequest): Promise<ApiResponse<User>> {
     await delay();
 
-    // 유효성 검사
     if (!userData.name.trim()) {
       return { success: false, message: '이름을 입력해주세요.' };
     }
 
-    if (!isValidEmail(userData.email)) {
+    if (!validateEmail(userData.email)) {
       return { success: false, message: '올바른 이메일 형식이 아닙니다.' };
     }
 
-    if (!isValidPassword(userData.password)) {
+    if (!validatePassword(userData.password)) {
       return {
         success: false,
         message: '비밀번호는 6-10자의 영문+숫자 조합이어야 합니다.'
@@ -158,7 +137,7 @@ export const authApi = {
   async checkEmailDuplicate(email: string): Promise<ApiResponse<{ available: boolean }>> {
     await delay(200);
 
-    if (!isValidEmail(email)) {
+    if (!validateEmail(email)) {
       return {
         success: false,
         message: '올바른 이메일 형식이 아닙니다.',

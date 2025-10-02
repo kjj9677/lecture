@@ -1,10 +1,13 @@
+"use client";
+
 import { Text } from "@/components/base";
 import styles from "./SignupFooter.module.css";
+import { useRouter } from "next/navigation";
 
 export default function SignupFooter() {
-  const handleLoginClick = () => {
-    window.location.href = "/";
-  };
+  const router = useRouter();
+
+  const handleLoginClick = () => router.push("/login");
 
   return (
     <footer className={styles.loginSection}>

@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/base";
 import { authApi } from "@/data/mockApi";
+import { useAuth } from "@/hooks/useAuth";
 import { SignupRequest } from "@/types";
+import { validateEmail, validatePassword, validatePhoneNumber } from "@/utils";
 import FormField from "../FormField";
 import UserTypeRadio from "../UserTypeRadio";
 import styles from "./SignupForm.module.css";
@@ -39,28 +41,12 @@ interface SignupFormProps {
 
 export default function SignupForm({ onLoadingChange }: SignupFormProps) {
   const router = useRouter();
+  const { login } = useAuth();
   const [formData, setFormData] = useState<SignupRequest>(initialFormData);
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [errors, setErrors] = useState<FormErrors>(initialErrors);
   const [emailVerified, setEmailVerified] = useState<boolean | null>(null);
   const [isCheckingEmail, setIsCheckingEmail] = useState(false);
-
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validatePassword = (password: string): boolean => {
-    if (password.length < 6 || password.length > 10) return false;
-    const hasLetter = /[a-zA-Z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
-    return hasLetter && hasNumber;
-  };
-
-  const validatePhoneNumber = (phone: string): boolean => {
-    const phoneRegex = /^010-\d{4}-\d{4}$/;
-    return phoneRegex.test(phone);
-  };
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {
@@ -183,7 +169,9 @@ export default function SignupForm({ onLoadingChange }: SignupFormProps) {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     if (!validateForm()) return;
 
     onLoadingChange(true);
@@ -192,7 +180,17 @@ export default function SignupForm({ onLoadingChange }: SignupFormProps) {
       const response = await authApi.signup(formData);
 
       if (response.success) {
-        router.push("/lectures");
+        const loginResponse = await authApi.login({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (loginResponse.success && loginResponse.data) {
+          login(loginResponse.data);
+          router.push("/lectures");
+        } else {
+          router.push("/login");
+        }
       } else {
         if (response.message?.includes("이메일")) {
           setErrors((prev) => ({
@@ -218,46 +216,53 @@ export default function SignupForm({ onLoadingChange }: SignupFormProps) {
     return "";
   };
 
+  const FORM_FIELDS = [
+    {
+      name: "name" as const,
+      label: "이름",
+      type: "text",
+      placeholder: "이름을 입력해주세요",
+      ariaLabel: "이름 입력",
+    },
+    {
+      name: "email" as const,
+      label: "이메일",
+      type: "email",
+      placeholder: "이메일을 입력해주세요",
+      ariaLabel: "이메일 입력",
+      actionButton: {
+        label: "중복확인",
+        onClick: handleCheckEmail,
+        disabled: isCheckingEmail || !formData.email.trim(),
+      },
+      successMessage: getEmailVerificationMessage(),
+    },
+    {
+      name: "password" as const,
+      label: "비밀번호",
+      type: "password",
+      placeholder: "6-10자 영문+숫자 조합",
+      ariaLabel: "비밀번호 입력",
+    },
+  ] as const;
+
   return (
-    <main className={styles.signupForm}>
-      <FormField
-        label="이름"
-        type="text"
-        placeholder="이름을 입력해주세요"
-        value={formData.name}
-        onChange={handleInputChange("name")}
-        error={errors.name}
-        ariaLabel="이름 입력"
-        required
-      />
-
-      <FormField
-        label="이메일"
-        type="email"
-        placeholder="이메일을 입력해주세요"
-        value={formData.email}
-        onChange={handleInputChange("email")}
-        error={errors.email}
-        ariaLabel="이메일 입력"
-        required
-        actionButton={{
-          label: "중복확인",
-          onClick: handleCheckEmail,
-          disabled: isCheckingEmail || !formData.email.trim(),
-        }}
-        successMessage={getEmailVerificationMessage()}
-      />
-
-      <FormField
-        label="비밀번호"
-        type="password"
-        placeholder="6-10자 영문+숫자 조합"
-        value={formData.password}
-        onChange={handleInputChange("password")}
-        error={errors.password}
-        ariaLabel="비밀번호 입력"
-        required
-      />
+    <form className={styles.signupForm} onSubmit={handleSubmit}>
+      {FORM_FIELDS.map((field) => (
+        <FormField
+          key={field.name}
+          label={field.label}
+          type={field.type}
+          placeholder={field.placeholder}
+          value={field.name === "name" ? formData.name : field.name === "email" ? formData.email : formData.password}
+          onChange={handleInputChange(field.name)}
+          error={field.name === "name" ? errors.name : field.name === "email" ? errors.email : errors.password}
+          ariaLabel={field.ariaLabel}
+          required
+          actionButton={"actionButton" in field ? field.actionButton : undefined}
+          successMessage={"successMessage" in field ? field.successMessage : undefined}
+        />
+      ))}
 
       <FormField
         label="비밀번호 확인"
@@ -286,12 +291,12 @@ export default function SignupForm({ onLoadingChange }: SignupFormProps) {
       <Button
         variant="primary"
         size="large"
-        onClick={handleSubmit}
+        type="submit"
         className={styles.submitButton}
         ariaLabel="회원가입"
       >
         가입하기
       </Button>
-    </main>
+    </form>
   );
 }

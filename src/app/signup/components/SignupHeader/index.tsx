@@ -7,9 +7,6 @@ export default function SignupHeader() {
       <Text type="HEADER_1" color="primary" as="h1">
         회원가입
       </Text>
-      <Text type="BODY_1" color="secondary">
-        월급쟁이부자들 강의 플랫폼
-      </Text>
     </header>
   );
 }
