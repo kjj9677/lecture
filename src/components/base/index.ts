@@ -11,3 +11,5 @@ export type {
 
 export { Input } from "./Input/Input";
 export type { InputProps, InputType, InputSize } from "./Input/Input";
+
+export { Modal } from "./Modal/Modal";
