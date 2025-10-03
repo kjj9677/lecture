@@ -26,13 +26,41 @@ export default function LectureCard({
   const isMyLecture = currentUserId === lecture.instructorId;
   const isEnrolled = lecture.applicants.some((s) => s === currentUserId);
   const showBadge = isMyLecture || isEnrolled;
+  const isCardClickable = !showBadge && !isFullyBooked;
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onSelectionChange(lecture.id, e.target.checked);
   };
 
+  const handleCardClick = () => {
+    if (isCardClickable) {
+      onSelectionChange(lecture.id, !isSelected);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if ((e.key === "Enter" || e.key === " ") && isCardClickable) {
+      e.preventDefault();
+      onSelectionChange(lecture.id, !isSelected);
+    }
+  };
+
   return (
-    <div className={`${styles.card} ${isSelected ? styles.selected : ""}`}>
+    <div
+      className={`${styles.card} ${isSelected ? styles.selected : ""} ${
+        isCardClickable ? styles.clickable : ""
+      }`}
+      onClick={handleCardClick}
+      onKeyDown={handleKeyDown}
+      role={isCardClickable ? "button" : undefined}
+      aria-pressed={isCardClickable ? isSelected : undefined}
+      tabIndex={isCardClickable ? 0 : undefined}
+      aria-label={
+        isCardClickable
+          ? `${lecture.title} 강의 ${isSelected ? "선택됨" : "선택"}`
+          : undefined
+      }
+    >
       <div className={styles.topRow}>
         <div className={styles.header}>
           <Text type="BODY_1" color="primary" className={styles.title}>
@@ -58,7 +86,8 @@ export default function LectureCard({
               onChange={handleCheckboxChange}
               disabled={isFullyBooked}
               className={styles.checkboxInput}
-              aria-label={`${lecture.title} 선택`}
+              aria-hidden="true"
+              tabIndex={-1}
             />
           )}
         </div>
