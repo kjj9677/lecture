@@ -19,14 +19,13 @@ const sortOptions = [
 export default function LecturesHeader({
   totalCount,
   sortOption,
-  onSortChange
+  onSortChange,
 }: LecturesHeaderProps) {
   const router = useRouter();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
-  const handleLogout = async () => {
-    await logout();
-    router.push("/login");
+  const handleMyPageClick = () => {
+    router.push("/mypage");
   };
 
   return (
@@ -43,11 +42,11 @@ export default function LecturesHeader({
         <Button
           variant="outline"
           size="small"
-          onClick={handleLogout}
-          className={styles.logoutButton}
-          ariaLabel="로그아웃"
+          onClick={handleMyPageClick}
+          className={styles.myPageButton}
+          ariaLabel="마이페이지 이동"
         >
-          로그아웃
+          마이페이지
         </Button>
       </div>
 

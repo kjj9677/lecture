@@ -34,7 +34,7 @@
   color: #6b7280;
 }
 
-.logoutButton {
+.myPageButton {
   font-size: 13px;
 }
 
@@ -102,7 +102,7 @@
     padding: 2px 6px;
   }
 
-  .logoutButton {
+  .myPageButton {
     font-size: 12px;
   }
 
