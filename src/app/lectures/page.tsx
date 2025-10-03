@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { PageContainer } from "@/components/layout";
 import { initializeMockData } from "@/data/initialData";
 import { useAuth } from "@/hooks/useAuth";
@@ -14,7 +15,11 @@ import {
   ErrorState,
   BatchEnrollmentBar,
 } from "./components";
-import CreateLectureModal from "./components/CreateLectureModal";
+
+const CreateLectureModal = dynamic(
+  () => import("./components/CreateLectureModal"),
+  { ssr: false }
+);
 
 export default function LecturesPage() {
   const router = useRouter();
