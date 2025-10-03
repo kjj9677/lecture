@@ -149,7 +149,7 @@ export function useSignupForm({ onLoadingChange }: UseSignupFormProps) {
           email: response.data!.available ? "" : response.message || "",
         }));
       }
-    } catch (error) {
+    } catch {
       alert("이메일 확인 중 오류가 발생했습니다.");
     } finally {
       setIsCheckingEmail(false);
@@ -195,7 +195,7 @@ export function useSignupForm({ onLoadingChange }: UseSignupFormProps) {
           alert(response.message || "회원가입에 실패했습니다.");
         }
       }
-    } catch (error) {
+    } catch {
       alert("회원가입 중 오류가 발생했습니다.");
     } finally {
       onLoadingChange(false);
