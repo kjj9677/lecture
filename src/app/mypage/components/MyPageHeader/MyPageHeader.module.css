@@ -34,6 +34,27 @@
   color: #6b7280;
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.resetButton {
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.resetButton:hover {
+  color: #374151;
+}
+
 .logoutButton {
   font-size: 13px;
 }

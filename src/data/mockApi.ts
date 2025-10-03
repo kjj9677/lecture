@@ -136,6 +136,18 @@ export const authApi = {
     return mockStorage.getCurrentSession();
   },
 
+  // 데이터 초기화 (개발용)
+  async resetData(): Promise<ApiResponse<void>> {
+    await delay(100);
+    const { initialUsers, initialLectures } = await import('./initialData');
+    mockStorage.resetToInitialData(initialUsers, initialLectures);
+    mockStorage.clearCurrentSession();
+    return {
+      success: true,
+      message: '데이터가 초기화되었습니다.',
+    };
+  },
+
   // 이메일 중복 확인
   async checkEmailDuplicate(
     email: string

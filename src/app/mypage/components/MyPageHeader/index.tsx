@@ -1,11 +1,17 @@
+"use client";
+
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Text, Button } from "@/components/base";
 import { useAuth } from "@/hooks/useAuth";
+import { authApi } from "@/data/mockApi";
+import ResetDataModal from "../ResetDataModal";
 import styles from "./MyPageHeader.module.css";
 
 export default function MyPageHeader() {
   const router = useRouter();
   const { user, logout } = useAuth();
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -14,6 +20,12 @@ export default function MyPageHeader() {
 
   const handleNavigateToLectures = () => {
     router.push("/lectures");
+  };
+
+  const handleResetData = async () => {
+    await authApi.resetData();
+    setIsResetModalOpen(false);
+    router.push("/login");
   };
 
   return (
@@ -27,15 +39,24 @@ export default function MyPageHeader() {
             {user?.userType === "instructor" ? "강사" : "학생"}
           </Text>
         </div>
-        <Button
-          variant="outline"
-          size="small"
-          onClick={handleLogout}
-          className={styles.logoutButton}
-          ariaLabel="로그아웃"
-        >
-          로그아웃
-        </Button>
+        <div className={styles.actions}>
+          <button
+            onClick={() => setIsResetModalOpen(true)}
+            className={styles.resetButton}
+            aria-label="데이터 초기화"
+          >
+            데이터 초기화
+          </button>
+          <Button
+            variant="outline"
+            size="small"
+            onClick={handleLogout}
+            className={styles.logoutButton}
+            ariaLabel="로그아웃"
+          >
+            로그아웃
+          </Button>
+        </div>
       </div>
 
       <div className={styles.titleSection}>
@@ -51,6 +72,12 @@ export default function MyPageHeader() {
           강의 목록 보기
         </Button>
       </div>
+
+      <ResetDataModal
+        isOpen={isResetModalOpen}
+        onClose={() => setIsResetModalOpen(false)}
+        onConfirm={handleResetData}
+      />
     </header>
   );
 }

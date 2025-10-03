@@ -188,6 +188,13 @@ class MockStorage {
       localStorage.removeItem(key);
     });
   }
+
+  // 데이터를 초기값으로 리셋 (개발용)
+  resetToInitialData(users: User[], lectures: Lecture[]): void {
+    this.clearAllData();
+    this.setUsers(users);
+    this.setLectures(lectures);
+  }
 }
 
 // 싱글톤 인스턴스 생성
