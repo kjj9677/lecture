@@ -5,10 +5,7 @@
 }
 
 .apiError {
-  padding: 12px;
-  background-color: var(--color-error-bg);
-  color: var(--color-error);
-  border-radius: 4px;
+  color: #dc2626;
   font-size: 14px;
   text-align: center;
 }
