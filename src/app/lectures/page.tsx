@@ -88,6 +88,7 @@ export default function LecturesPage() {
 
       <BatchEnrollmentBar
         selectedLectureIds={selectedLectures}
+        lectures={lectures}
         onEnrollmentSuccess={handleEnrollmentSuccess}
         onClearSelection={handleClearSelection}
       />

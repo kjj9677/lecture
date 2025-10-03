@@ -21,6 +21,12 @@
   overflow-y: auto;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   animation: slideUp 0.2s ease-out;
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+}
+
+.modal::-webkit-scrollbar {
+  display: none; 
 }
 
 @keyframes slideUp {

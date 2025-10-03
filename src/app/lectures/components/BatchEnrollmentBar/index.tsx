@@ -1,28 +1,38 @@
+"use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Text, Button } from "@/components/base";
 import { lectureApi } from "@/data/mockApi";
 import { useAuth } from "@/hooks/useAuth";
+import { Lecture } from "@/types";
+import EnrollmentConfirmModal from "../EnrollmentConfirmModal";
 import styles from "./BatchEnrollmentBar.module.css";
 
 interface BatchEnrollmentBarProps {
   selectedLectureIds: string[];
+  lectures: Lecture[];
   onEnrollmentSuccess: () => void;
   onClearSelection: () => void;
 }
 
 export default function BatchEnrollmentBar({
   selectedLectureIds,
+  lectures,
   onEnrollmentSuccess,
   onClearSelection,
 }: BatchEnrollmentBarProps) {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const [isEnrolling, setIsEnrolling] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
   const selectedCount = selectedLectureIds.length;
+  const selectedLectures = lectures.filter((lecture) =>
+    selectedLectureIds.includes(lecture.id)
+  );
 
-  const handleBatchEnroll = async () => {
+  const handleOpenConfirmModal = () => {
     if (selectedCount === 0) return;
 
     if (!isAuthenticated) {
@@ -30,6 +40,12 @@ export default function BatchEnrollmentBar({
       router.push("/login");
       return;
     }
+
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleBatchEnroll = async () => {
+    setIsConfirmModalOpen(false);
 
     setIsEnrolling(true);
 
@@ -90,7 +106,7 @@ export default function BatchEnrollmentBar({
         <Button
           variant="primary"
           size="large"
-          onClick={handleBatchEnroll}
+          onClick={handleOpenConfirmModal}
           disabled={isEnrolling}
           className={styles.enrollButton}
           ariaLabel={`선택한 ${selectedCount}개 과목 일괄 신청`}
@@ -98,6 +114,13 @@ export default function BatchEnrollmentBar({
           {isEnrolling ? "신청 중..." : "신청하기"}
         </Button>
       </div>
+
+      <EnrollmentConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={handleBatchEnroll}
+        selectedLectures={selectedLectures}
+      />
     </div>
   );
 }
