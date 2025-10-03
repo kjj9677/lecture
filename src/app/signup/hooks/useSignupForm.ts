@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { authApi } from "@/data/mockApi";
 import { useAuth } from "@/hooks/useAuth";
 import { SignupRequest } from "@/types";
-import { validateEmail, validatePassword, validatePhoneNumber } from "@/utils";
+import { validateEmail, validatePassword, validatePhoneNumber, formatPhoneNumber } from "@/utils";
 
 interface FormErrors {
   name: string;
@@ -90,9 +90,13 @@ export function useSignupForm({ onLoadingChange }: UseSignupFormProps) {
 
   const handleInputChange =
     (field: keyof SignupRequest) => (event: ChangeEvent<HTMLInputElement>) => {
+      const value = field === "phone"
+        ? formatPhoneNumber(event.target.value)
+        : event.target.value;
+
       setFormData((prev) => ({
         ...prev,
-        [field]: event.target.value,
+        [field]: value,
       }));
 
       if (field === "email") {
