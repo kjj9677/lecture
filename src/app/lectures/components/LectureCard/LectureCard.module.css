@@ -84,6 +84,13 @@
   font-weight: 600;
 }
 
+.almostFull {
+  color: #dc2626;
+  font-weight: bold;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
 .price {
   position: absolute;
   top: 40px;

@@ -11,9 +11,9 @@ interface LecturesHeaderProps {
 }
 
 const sortOptions = [
-  { value: "recent" as LectureSortOption, label: "최신순" },
-  { value: "popular" as LectureSortOption, label: "인기순" },
-  { value: "enrollment-rate" as LectureSortOption, label: "등록률순" },
+  { value: "recent" as LectureSortOption, label: "최근 등록순" },
+  { value: "popular" as LectureSortOption, label: "신청자 많은순" },
+  { value: "enrollment-rate" as LectureSortOption, label: "신청률 높은 순" },
 ];
 
 export default function LecturesHeader({
