@@ -1,9 +1,9 @@
-import { Text, Input, Button } from "@/components/base";
+import { Text, Input, Button, InputType } from "@/components/base";
 import styles from "./FormField.module.css";
 
 interface FormFieldProps {
   label: string;
-  type: string;
+  type: InputType;
   placeholder: string;
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
