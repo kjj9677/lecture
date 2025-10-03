@@ -1,15 +1,12 @@
 import { User, Lecture, UserSession } from '@/types';
 
-// localStorage 키 상수
 const STORAGE_KEYS = {
   USERS: 'mock_users',
   LECTURES: 'mock_lectures',
   CURRENT_SESSION: 'mock_current_session',
 } as const;
 
-// 제네릭 localStorage 유틸리티
 class MockStorage {
-  // 데이터 저장
   private setItem<T>(key: string, data: T): void {
     try {
       localStorage.setItem(key, JSON.stringify(data));
@@ -18,7 +15,6 @@ class MockStorage {
     }
   }
 
-  // 데이터 조회
   private getItem<T>(key: string, defaultValue: T): T {
     try {
       const item = localStorage.getItem(key);
@@ -29,7 +25,6 @@ class MockStorage {
     }
   }
 
-  // 사용자 관련 메서드
   getUsers(): User[] {
     return this.getItem<User[]>(STORAGE_KEYS.USERS, []);
   }
@@ -65,7 +60,6 @@ class MockStorage {
     return users.find(u => u.email === email) || null;
   }
 
-  // 강의 관련 메서드
   getLectures(): Lecture[] {
     return this.getItem<Lecture[]>(STORAGE_KEYS.LECTURES, []);
   }
@@ -111,18 +105,13 @@ class MockStorage {
     return lectures.filter(l => l.instructorId === instructorId);
   }
 
-  // 수강 신청 관련 메서드
   applyToLecture(lectureId: string, userId: string): boolean {
     const lecture = this.getLectureById(lectureId);
     if (!lecture) return false;
 
-    // 이미 신청했는지 확인
     if (lecture.applicants.includes(userId)) return false;
-
-    // 정원 확인
     if (lecture.currentStudents >= lecture.maxStudents) return false;
 
-    // 신청자 추가
     lecture.applicants.push(userId);
     lecture.currentStudents += 1;
 
@@ -141,7 +130,6 @@ class MockStorage {
     const applicantIndex = lecture.applicants.indexOf(userId);
     if (applicantIndex === -1) return false;
 
-    // 신청자 제거
     lecture.applicants.splice(applicantIndex, 1);
     lecture.currentStudents -= 1;
 
@@ -158,7 +146,6 @@ class MockStorage {
     return lectures.filter(l => l.applicants.includes(userId));
   }
 
-  // 세션 관리 메서드
   getCurrentSession(): UserSession | null {
     return this.getItem<UserSession | null>(STORAGE_KEYS.CURRENT_SESSION, null);
   }
@@ -171,9 +158,7 @@ class MockStorage {
     localStorage.removeItem(STORAGE_KEYS.CURRENT_SESSION);
   }
 
-  // 데이터 초기화 메서드
   initializeData(users: User[], lectures: Lecture[]): void {
-    // 기존 데이터가 없을 때만 초기화
     if (this.getUsers().length === 0) {
       this.setUsers(users);
     }
@@ -182,14 +167,12 @@ class MockStorage {
     }
   }
 
-  // 모든 데이터 삭제 (개발용)
   clearAllData(): void {
     Object.values(STORAGE_KEYS).forEach(key => {
       localStorage.removeItem(key);
     });
   }
 
-  // 데이터를 초기값으로 리셋 (개발용)
   resetToInitialData(users: User[], lectures: Lecture[]): void {
     this.clearAllData();
     this.setUsers(users);
@@ -197,5 +180,4 @@ class MockStorage {
   }
 }
 
-// 싱글톤 인스턴스 생성
 export const mockStorage = new MockStorage();

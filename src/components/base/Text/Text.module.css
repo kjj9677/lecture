@@ -74,14 +74,12 @@
   color: #000000;
 }
 
-/* Interactive states */
 .text:focus-visible {
   outline: 2px solid #2563eb;
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 640px) {
   .header_1 {
     font-size: 28px;

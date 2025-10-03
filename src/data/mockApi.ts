@@ -26,9 +26,7 @@ const checkPassword = (password: string, hashedPassword: string): boolean => {
   return password === hashedPassword;
 };
 
-// 인증 API
 export const authApi = {
-  // 로그인
   async login(credentials: LoginRequest): Promise<ApiResponse<UserSession>> {
     await delay();
 
@@ -56,7 +54,7 @@ export const authApi = {
     }
 
     const session: UserSession = {
-      user: { ...user, password: "" }, // 비밀번호 제외
+      user: { ...user, password: "" },
       token: generateToken(),
       loginTime: new Date().toISOString(),
     };
@@ -70,7 +68,6 @@ export const authApi = {
     };
   },
 
-  // 회원가입
   async signup(userData: SignupRequest): Promise<ApiResponse<User>> {
     await delay();
 
@@ -93,7 +90,6 @@ export const authApi = {
       return { success: false, message: "휴대폰 번호를 입력해주세요." };
     }
 
-    // 이메일 중복 확인
     const existingUser = mockStorage.getUserByEmail(userData.email);
     if (existingUser) {
       return {
@@ -116,12 +112,11 @@ export const authApi = {
 
     return {
       success: true,
-      data: { ...newUser, password: "" }, // 비밀번호 제외
+      data: { ...newUser, password: "" },
       message: "회원가입이 완료되었습니다.",
     };
   },
 
-  // 로그아웃
   async logout(): Promise<ApiResponse<void>> {
     await delay(100);
     mockStorage.clearCurrentSession();
@@ -131,12 +126,10 @@ export const authApi = {
     };
   },
 
-  // 현재 세션 확인
   getCurrentSession(): UserSession | null {
     return mockStorage.getCurrentSession();
   },
 
-  // 데이터 초기화 (개발용)
   async resetData(): Promise<ApiResponse<void>> {
     await delay(100);
     const { initialUsers, initialLectures } = await import('./initialData');
@@ -148,7 +141,6 @@ export const authApi = {
     };
   },
 
-  // 이메일 중복 확인
   async checkEmailDuplicate(
     email: string
   ): Promise<ApiResponse<{ available: boolean }>> {
@@ -179,9 +171,7 @@ export const authApi = {
   },
 };
 
-// 강의 API
 export const lectureApi = {
-  // 강의 목록 조회
   async getLectures(
     options: LectureListOptions = {}
   ): Promise<ApiResponse<Lecture[]>> {
@@ -189,12 +179,10 @@ export const lectureApi = {
 
     let lectures = mockStorage.getLectures();
 
-    // 정렬
     if (options.sort) {
       lectures = this.sortLectures(lectures, options.sort);
     }
 
-    // 페이지네이션
     if (options.offset !== undefined && options.limit !== undefined) {
       lectures = lectures.slice(options.offset, options.offset + options.limit);
     }
@@ -205,7 +193,6 @@ export const lectureApi = {
     };
   },
 
-  // 강의 상세 조회
   async getLecture(lectureId: string): Promise<ApiResponse<Lecture>> {
     await delay();
 
@@ -224,7 +211,6 @@ export const lectureApi = {
     };
   },
 
-  // 강의 생성 (강사만)
   async createLecture(
     lectureData: CreateLectureRequest
   ): Promise<ApiResponse<Lecture>> {
@@ -238,7 +224,6 @@ export const lectureApi = {
       };
     }
 
-    // 유효성 검사
     if (!lectureData.title.trim()) {
       return { success: false, message: "강의명을 입력해주세요." };
     }
@@ -322,7 +307,6 @@ export const lectureApi = {
     };
   },
 
-  // 강의 삭제 (강사만, 본인 강의만)
   async deleteLecture(lectureId: string): Promise<ApiResponse<void>> {
     await delay();
 
@@ -357,7 +341,6 @@ export const lectureApi = {
     };
   },
 
-  // 수강 신청
   async applyToLecture(lectureId: string): Promise<ApiResponse<void>> {
     await delay();
 
@@ -399,7 +382,6 @@ export const lectureApi = {
     };
   },
 
-  // 수강 신청 취소
   async cancelApplication(lectureId: string): Promise<ApiResponse<void>> {
     await delay();
 
@@ -429,7 +411,6 @@ export const lectureApi = {
     };
   },
 
-  // 내 수강 신청 목록
   async getMyApplications(): Promise<ApiResponse<Lecture[]>> {
     await delay();
 
@@ -449,7 +430,6 @@ export const lectureApi = {
     };
   },
 
-  // 내가 개설한 강의 목록 (강사용)
   async getMyLectures(): Promise<ApiResponse<Lecture[]>> {
     await delay();
 
@@ -469,7 +449,6 @@ export const lectureApi = {
     };
   },
 
-  // 강의 정렬 함수
   sortLectures(lectures: Lecture[], sortBy: LectureSortOption): Lecture[] {
     switch (sortBy) {
       case "recent":
