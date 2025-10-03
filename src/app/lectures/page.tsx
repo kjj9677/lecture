@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PageContainer } from "@/components/layout";
 import { initializeMockData } from "@/data/initialData";
@@ -14,10 +14,12 @@ import {
   ErrorState,
   BatchEnrollmentBar,
 } from "./components";
+import CreateLectureModal from "./components/CreateLectureModal";
 
 export default function LecturesPage() {
   const router = useRouter();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const {
     lectures,
     isLoading,
@@ -28,6 +30,7 @@ export default function LecturesPage() {
     handleSelectionChange,
     handleEnrollmentSuccess,
     handleClearSelection,
+    handleCreateLectureSuccess,
   } = useLecturesPage();
 
   useEffect(() => {
@@ -67,6 +70,7 @@ export default function LecturesPage() {
         totalCount={lectures.length}
         sortOption={sortOption}
         onSortChange={handleSortChange}
+        onCreateLecture={() => setIsCreateModalOpen(true)}
       />
 
       {isLoading ? (
@@ -85,6 +89,12 @@ export default function LecturesPage() {
         selectedLectureIds={selectedLectures}
         onEnrollmentSuccess={handleEnrollmentSuccess}
         onClearSelection={handleClearSelection}
+      />
+
+      <CreateLectureModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={handleCreateLectureSuccess}
       />
     </PageContainer>
   );

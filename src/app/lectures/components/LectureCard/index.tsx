@@ -1,5 +1,6 @@
 import { Text } from "@/components/base";
 import { Lecture } from "@/types";
+import { formatPrice } from "@/utils";
 import styles from "./LectureCard.module.css";
 
 const ALMOST_FULL_THRESHOLD = 0.9;
@@ -19,10 +20,6 @@ export default function LectureCard({
   const enrollmentRate = lecture.currentStudents / lecture.maxStudents;
   const isAlmostFull =
     enrollmentRate >= ALMOST_FULL_THRESHOLD && !isFullyBooked;
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("ko-KR").format(price);
-  };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onSelectionChange(lecture.id, e.target.checked);
@@ -74,7 +71,7 @@ export default function LectureCard({
 
         <div className={styles.price}>
           <Text type="BODY_1" color="primary" className={styles.priceText}>
-            {formatPrice(lecture.price)}원
+            {formatPrice(lecture.price, true)}
           </Text>
         </div>
       </div>

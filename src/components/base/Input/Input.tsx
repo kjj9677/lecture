@@ -18,7 +18,19 @@ export interface InputProps {
   className?: string;
   style?: React.CSSProperties;
 
-  // 접근성 props
+  min?: string;
+  max?: string;
+  step?: string;
+  inputMode?:
+    | "none"
+    | "text"
+    | "tel"
+    | "url"
+    | "email"
+    | "numeric"
+    | "decimal"
+    | "search";
+
   id?: string;
   name?: string;
   ariaLabel?: string;
@@ -28,7 +40,6 @@ export interface InputProps {
   role?: string;
   tabIndex?: number;
 
-  // 이벤트 핸들러
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
@@ -47,6 +58,10 @@ export const Input: React.FC<InputProps> = ({
   required = false,
   className = "",
   style,
+  min,
+  max,
+  step,
+  inputMode,
   id,
   name,
   ariaLabel,
@@ -83,6 +98,10 @@ export const Input: React.FC<InputProps> = ({
       disabled={disabled}
       readOnly={readOnly}
       required={required}
+      min={min}
+      max={max}
+      step={step}
+      inputMode={inputMode}
       id={id}
       name={name}
       aria-label={ariaLabel}

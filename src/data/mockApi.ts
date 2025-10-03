@@ -222,6 +222,14 @@ export const lectureApi = {
       return { success: false, message: '강의명을 입력해주세요.' };
     }
 
+    // 강의명 중복 확인
+    const existingLecture = mockStorage.getLectures().find(
+      lecture => lecture.title === lectureData.title
+    );
+    if (existingLecture) {
+      return { success: false, message: '이미 존재하는 강의명입니다.' };
+    }
+
     if (lectureData.price < 0) {
       return { success: false, message: '가격은 0원 이상이어야 합니다.' };
     }

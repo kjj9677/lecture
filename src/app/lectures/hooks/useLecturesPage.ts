@@ -33,6 +33,11 @@ export function useLecturesPage() {
     setSelectedLectures([]);
   };
 
+  const handleCreateLectureSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ["lectures"] });
+    queryClient.invalidateQueries({ queryKey: ["myTeachingLectures"] });
+  };
+
   return {
     lectures,
     isLoading,
@@ -43,5 +48,6 @@ export function useLecturesPage() {
     handleSelectionChange,
     handleEnrollmentSuccess,
     handleClearSelection,
+    handleCreateLectureSuccess,
   };
 }

@@ -14,3 +14,8 @@ export const validatePhoneNumber = (phone: string): boolean => {
   const phoneRegex = /^010-\d{4}-\d{4}$/;
   return phoneRegex.test(phone);
 };
+
+export const formatPrice = (price: number, withUnit: boolean = false): string => {
+  const formatted = new Intl.NumberFormat("ko-KR").format(price);
+  return withUnit ? `${formatted}원` : formatted;
+};

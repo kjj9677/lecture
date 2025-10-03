@@ -1,0 +1,25 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.apiError {
+  padding: 12px;
+  background-color: var(--color-error-bg);
+  color: var(--color-error);
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.actions button {
+  min-width: 100px;
+}

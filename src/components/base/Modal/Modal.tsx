@@ -66,7 +66,6 @@ export const Modal: React.FC<ModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       previousActiveElement.current = document.activeElement as HTMLElement;
-
       document.body.style.overflow = "hidden";
 
       setTimeout(() => {
@@ -75,8 +74,6 @@ export const Modal: React.FC<ModalProps> = ({
         const firstElement = focusableElements?.[0] as HTMLElement;
         firstElement?.focus();
       }, 0);
-
-      document.addEventListener("keydown", handleKeyDown);
     } else {
       document.body.style.overflow = "";
       previousActiveElement.current?.focus();
@@ -84,8 +81,16 @@ export const Modal: React.FC<ModalProps> = ({
 
     return () => {
       document.body.style.overflow = "";
-      document.removeEventListener("keydown", handleKeyDown);
     };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }
   }, [isOpen, handleKeyDown]);
 
   if (!isOpen) return null;

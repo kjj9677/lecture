@@ -34,6 +34,16 @@
   color: #6b7280;
 }
 
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.createButton {
+  font-size: 13px;
+}
+
 .myPageButton {
   font-size: 13px;
 }

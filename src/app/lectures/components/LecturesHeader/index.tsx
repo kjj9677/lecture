@@ -8,6 +8,7 @@ interface LecturesHeaderProps {
   totalCount: number;
   sortOption: LectureSortOption;
   onSortChange: (option: LectureSortOption) => void;
+  onCreateLecture?: () => void;
 }
 
 const sortOptions = [
@@ -20,13 +21,14 @@ export default function LecturesHeader({
   totalCount,
   sortOption,
   onSortChange,
+  onCreateLecture,
 }: LecturesHeaderProps) {
   const router = useRouter();
   const { user } = useAuth();
 
-  const handleMyPageClick = () => {
-    router.push("/mypage");
-  };
+  const isInstructor = user?.userType === "instructor";
+
+  const handleMyPageClick = () => router.push("/mypage");
 
   return (
     <header className={styles.header}>
@@ -39,15 +41,28 @@ export default function LecturesHeader({
             {user?.userType === "instructor" ? "강사" : "학생"}
           </Text>
         </div>
-        <Button
-          variant="outline"
-          size="small"
-          onClick={handleMyPageClick}
-          className={styles.myPageButton}
-          ariaLabel="마이페이지 이동"
-        >
-          마이페이지
-        </Button>
+        <div className={styles.buttonGroup}>
+          {isInstructor && onCreateLecture && (
+            <Button
+              variant="outline"
+              size="small"
+              onClick={onCreateLecture}
+              className={styles.createButton}
+              ariaLabel="강의 개설하기"
+            >
+              강의 개설하기
+            </Button>
+          )}
+          <Button
+            variant="primary"
+            size="small"
+            onClick={handleMyPageClick}
+            className={styles.myPageButton}
+            ariaLabel="마이페이지 이동"
+          >
+            마이페이지
+          </Button>
+        </div>
       </div>
 
       <div className={styles.titleSection}>
