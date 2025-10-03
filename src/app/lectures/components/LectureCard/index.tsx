@@ -33,28 +33,7 @@ export default function LectureCard({
 
   return (
     <div className={`${styles.card} ${isSelected ? styles.selected : ""}`}>
-      <div className={styles.checkbox}>
-        {showBadge ? (
-          <span
-            className={
-              isMyLecture ? styles.myLectureBadge : styles.enrolledBadge
-            }
-          >
-            {isMyLecture ? "나의 강의" : "수강중"}
-          </span>
-        ) : (
-          <input
-            type="checkbox"
-            checked={isSelected}
-            onChange={handleCheckboxChange}
-            disabled={isFullyBooked}
-            className={styles.checkboxInput}
-            aria-label={`${lecture.title} 선택`}
-          />
-        )}
-      </div>
-
-      <div className={styles.content}>
+      <div className={styles.topRow}>
         <div className={styles.header}>
           <Text type="BODY_1" color="primary" className={styles.title}>
             {lecture.title}
@@ -63,28 +42,43 @@ export default function LectureCard({
             {lecture.instructorName}
           </Text>
         </div>
-
-        <div className={styles.info}>
-          <div className={styles.enrollment}>
-            <Text
-              type="BODY_2"
-              color="neutral"
-              className={styles.enrollmentText}
+        <div className={styles.checkbox}>
+          {showBadge ? (
+            <span
+              className={
+                isMyLecture ? styles.myLectureBadge : styles.enrolledBadge
+              }
             >
-              {isFullyBooked ? (
-                <span className={styles.fullText}>마감</span>
-              ) : (
-                <>
-                  수강 인원 ({lecture.currentStudents}/{lecture.maxStudents})
-                  {isAlmostFull && (
-                    <span className={styles.almostFull}>마감임박</span>
-                  )}
-                </>
-              )}
-            </Text>
-          </div>
+              {isMyLecture ? "나의 강의" : "수강중"}
+            </span>
+          ) : (
+            <input
+              type="checkbox"
+              checked={isSelected}
+              onChange={handleCheckboxChange}
+              disabled={isFullyBooked}
+              className={styles.checkboxInput}
+              aria-label={`${lecture.title} 선택`}
+            />
+          )}
         </div>
+      </div>
 
+      <div className={styles.bottomRow}>
+        <div className={styles.enrollment}>
+          <Text type="BODY_2" color="neutral" className={styles.enrollmentText}>
+            {isFullyBooked ? (
+              <span className={styles.fullText}>정원 마감</span>
+            ) : (
+              <>
+                수강 인원 ({lecture.currentStudents}/{lecture.maxStudents})
+                {isAlmostFull && (
+                  <span className={styles.almostFull}>마감임박</span>
+                )}
+              </>
+            )}
+          </Text>
+        </div>
         <div className={styles.price}>
           <Text type="BODY_1" color="primary" className={styles.priceText}>
             {formatPrice(lecture.price, true)}

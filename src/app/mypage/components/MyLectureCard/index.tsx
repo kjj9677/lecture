@@ -2,18 +2,11 @@ import { Text } from "@/components/base";
 import { Lecture } from "@/types";
 import styles from "./MyLectureCard.module.css";
 
-const ALMOST_FULL_THRESHOLD = 0.9;
-
 interface MyLectureCardProps {
   lecture: Lecture;
 }
 
 export default function MyLectureCard({ lecture }: MyLectureCardProps) {
-  const isFullyBooked = lecture.currentStudents >= lecture.maxStudents;
-  const enrollmentRate = lecture.currentStudents / lecture.maxStudents;
-  const isAlmostFull =
-    enrollmentRate >= ALMOST_FULL_THRESHOLD && !isFullyBooked;
-
   return (
     <div className={styles.card}>
       <div className={styles.content}>
@@ -33,16 +26,7 @@ export default function MyLectureCard({ lecture }: MyLectureCardProps) {
               color="neutral"
               className={styles.enrollmentText}
             >
-              {isFullyBooked ? (
-                <span className={styles.fullText}>마감</span>
-              ) : (
-                <>
-                  수강 인원 ({lecture.currentStudents}/{lecture.maxStudents})
-                  {isAlmostFull && (
-                    <span className={styles.almostFull}>마감임박</span>
-                  )}
-                </>
-              )}
+              수강 인원 ({lecture.currentStudents}/{lecture.maxStudents})
             </Text>
           </div>
         </div>

@@ -39,13 +39,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 24px 24px 16px;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .title {
   font-size: 20px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: #374151;
   margin: 0;
 }
 
@@ -54,7 +54,7 @@
   border: none;
   font-size: 28px;
   line-height: 1;
-  color: var(--color-text-secondary);
+  color: #6b7280;
   cursor: pointer;
   padding: 0;
   width: 32px;
@@ -67,18 +67,18 @@
 }
 
 .closeButton:hover {
-  background-color: var(--color-background-hover);
+  background-color: #f3f4f6;
 }
 
 .closeButton:focus {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid #2563eb;
   outline-offset: 2px;
 }
 
 .description {
   padding: 16px 24px 0;
   margin: 0;
-  color: var(--color-text-secondary);
+  color: #6b7280;
   font-size: 14px;
 }
 

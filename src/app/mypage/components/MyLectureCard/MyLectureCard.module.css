@@ -1,15 +1,17 @@
 .card {
+  background-color: white;
+  border: 1px solid #e5e7eb;
   display: flex;
-  padding: 20px;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background-color: var(--color-background);
+  border-radius: 12px;
+  gap: 12px;
+  padding: 16px;
   transition: all 0.2s ease;
+transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .card:hover {
-  border-color: var(--color-primary);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: #d1d5db;
 }
 
 .content {
@@ -52,14 +54,14 @@
 }
 
 .fullText {
-  color: var(--color-error);
+  color: #dc2626;
   font-weight: 600;
 }
 
 .almostFull {
   padding: 2px 8px;
-  background-color: var(--color-warning-bg);
-  color: var(--color-warning);
+  background-color: #fef3c7;
+  color: #d97706;
   border-radius: 4px;
   font-size: 12px;
   font-weight: 500;

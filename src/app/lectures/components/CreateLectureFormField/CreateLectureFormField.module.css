@@ -7,11 +7,11 @@
 .label {
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-text-primary);
+  color: #374151;
 }
 
 .inputError {
-  border-color: var(--color-error) !important;
+  border-color: #dc2626 !important;
 }
 
 .errorMessage {
