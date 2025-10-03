@@ -6,11 +6,35 @@
   margin-bottom: 80px;
 }
 
+.observer {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 80px;
+}
+
+.loading {
+  font-size: 24px;
+  color: #6b7280;
+  letter-spacing: 4px;
+}
+
 @media (max-width: 640px) {
   .grid {
     grid-template-columns: 1fr;
     gap: 14px;
     margin-bottom: 70px;
+  }
+
+  .observer {
+    height: 50px;
+    margin-bottom: 70px;
+  }
+
+  .loading {
+    font-size: 20px;
   }
 }
 

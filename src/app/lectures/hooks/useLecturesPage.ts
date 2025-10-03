@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { useLectures } from "@/hooks/useLectures";
+import { useInfiniteLectures } from "@/hooks/useInfiniteLectures";
 import { LectureSortOption } from "@/types";
 
 export function useLecturesPage() {
@@ -8,7 +8,16 @@ export function useLecturesPage() {
   const [sortOption, setSortOption] = useState<LectureSortOption>("recent");
   const [selectedLectures, setSelectedLectures] = useState<string[]>([]);
 
-  const { lectures, isLoading, error } = useLectures(sortOption);
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteLectures(sortOption);
+
+  const lectures = data?.pages.flatMap((page) => page.lectures) || [];
 
   const handleSortChange = (newSortOption: LectureSortOption) => {
     setSortOption(newSortOption);
@@ -41,9 +50,12 @@ export function useLecturesPage() {
   return {
     lectures,
     isLoading,
-    error,
+    error: error?.message || null,
     sortOption,
     selectedLectures,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     handleSortChange,
     handleSelectionChange,
     handleEnrollmentSuccess,

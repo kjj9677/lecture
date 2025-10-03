@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { PageContainer } from "@/components/layout";
 import { initializeMockData } from "@/data/initialData";
@@ -26,12 +26,40 @@ export default function LecturesPage() {
     error,
     sortOption,
     selectedLectures,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
     handleSortChange,
     handleSelectionChange,
     handleEnrollmentSuccess,
     handleClearSelection,
     handleCreateLectureSuccess,
   } = useLecturesPage();
+
+  const observerRef = useRef<HTMLDivElement>(null);
+
+  const handleObserver = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      const [target] = entries;
+      if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage]
+  );
+
+  useEffect(() => {
+    const element = observerRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(handleObserver, {
+      threshold: 0.1,
+    });
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, [handleObserver]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -83,6 +111,8 @@ export default function LecturesPage() {
           selectedLectures={selectedLectures}
           onSelectionChange={handleSelectionChange}
           currentUserId={user?.id}
+          observerRef={observerRef}
+          isFetchingNextPage={isFetchingNextPage}
         />
       )}
 
