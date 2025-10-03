@@ -25,7 +25,8 @@ export function useLecturesPage() {
   };
 
   const handleEnrollmentSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: ["lectures", sortOption] });
+    queryClient.invalidateQueries({ queryKey: ["lectures"] });
+    queryClient.invalidateQueries({ queryKey: ["myLectures"] });
   };
 
   const handleClearSelection = () => {

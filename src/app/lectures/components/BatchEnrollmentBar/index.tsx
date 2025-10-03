@@ -17,7 +17,7 @@ export default function BatchEnrollmentBar({
   onClearSelection,
 }: BatchEnrollmentBarProps) {
   const router = useRouter();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [isEnrolling, setIsEnrolling] = useState(false);
 
   const selectedCount = selectedLectureIds.length;
@@ -28,11 +28,6 @@ export default function BatchEnrollmentBar({
     if (!isAuthenticated) {
       alert("로그인이 필요합니다.");
       router.push("/login");
-      return;
-    }
-
-    if (user?.userType === "instructor") {
-      alert("강사는 수강 신청을 할 수 없습니다.");
       return;
     }
 
