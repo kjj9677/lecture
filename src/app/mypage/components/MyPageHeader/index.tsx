@@ -12,7 +12,7 @@ export default function MyPageHeader() {
     router.push("/login");
   };
 
-  const handleGoBack = () => {
+  const handleNavigateToLectures = () => {
     router.push("/lectures");
   };
 
@@ -43,12 +43,12 @@ export default function MyPageHeader() {
           마이페이지
         </Text>
         <Button
-          variant="ghost"
+          variant="secondary"
           size="small"
-          onClick={handleGoBack}
-          ariaLabel="강의 목록으로 돌아가기"
+          onClick={handleNavigateToLectures}
+          ariaLabel="강의 목록으로가기"
         >
-          ← 강의 목록
+          강의 목록 보기
         </Button>
       </div>
     </header>

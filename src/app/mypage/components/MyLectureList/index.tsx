@@ -1,6 +1,6 @@
 import { Text } from "@/components/base";
 import { Lecture } from "@/types";
-import LectureCard from "@/app/lectures/components/LectureCard";
+import MyLectureCard from "@/app/mypage/components/MyLectureCard";
 import LoadingState from "@/app/lectures/components/LoadingState";
 import ErrorState from "@/app/lectures/components/ErrorState";
 import styles from "./MyLectureList.module.css";
@@ -37,12 +37,7 @@ export default function MyLectureList({
   return (
     <div className={styles.lectureList}>
       {lectures.map((lecture) => (
-        <LectureCard
-          key={lecture.id}
-          lecture={lecture}
-          isSelected={false}
-          onSelectionChange={() => {}}
-        />
+        <MyLectureCard key={lecture.id} lecture={lecture} />
       ))}
     </div>
   );
