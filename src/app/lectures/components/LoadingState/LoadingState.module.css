@@ -18,19 +18,32 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  height: 150px;
-  position: relative;
+  height: 100%;
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.bottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
 }
 
 .skeletonHeader {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding-right: 80px;
+  gap: 4px;
 }
 
 .skeletonTitle {
-  height: 20px;
+  height: 22px;
   background-color: #f3f4f6;
   border-radius: 4px;
   width: 85%;
@@ -38,45 +51,41 @@
 }
 
 .skeletonInstructor {
-  height: 16px;
+  height: 22px;
   background-color: #f3f4f6;
   border-radius: 4px;
-  width: 40%;
+  width: 50%;
   animation: pulse 1.5s ease-in-out infinite;
   animation-delay: 0.1s;
 }
 
 .skeletonCheckbox {
-  position: absolute;
-  top: 12px;
-  right: 12px;
   width: 18px;
   height: 18px;
   background-color: #f3f4f6;
   border-radius: 3px;
+  flex-shrink: 0;
   animation: pulse 1.5s ease-in-out infinite;
   animation-delay: 0.4s;
 }
 
-.skeletonPrice {
-  position: absolute;
-  top: 40px;
-  right: 12px;
-  height: 16px;
-  width: 60px;
-  background-color: #f3f4f6;
-  border-radius: 4px;
-  animation: pulse 1.5s ease-in-out infinite;
-  animation-delay: 0.3s;
-}
-
 .skeletonEnrollment {
-  height: 14px;
-  width: 35%;
+  height: 18px;
+  width: 45%;
   background-color: #f3f4f6;
   border-radius: 4px;
   animation: pulse 1.5s ease-in-out infinite;
   animation-delay: 0.2s;
+}
+
+.skeletonPrice {
+  height: 22px;
+  width: 70px;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  flex-shrink: 0;
+  animation: pulse 1.5s ease-in-out infinite;
+  animation-delay: 0.3s;
 }
 
 @keyframes pulse {
@@ -97,25 +106,34 @@
 
   .skeletonCard {
     padding: 14px;
-    height: 140px;
+    gap: 10px;
   }
 
-  .skeletonHeader {
-    padding-right: 70px;
+  .topRow,
+  .bottomRow {
+    gap: 10px;
   }
 
   .skeletonCheckbox {
-    top: 10px;
-    right: 10px;
     width: 16px;
     height: 16px;
   }
 
   .skeletonPrice {
-    top: 35px;
-    right: 10px;
-    width: 55px;
-    height: 15px;
+    height: 16px;
+    width: 60px;
+  }
+
+  .skeletonEnrollment {
+    height: 16px;
+  }
+
+  .skeletonTitle {
+    height: 20px;
+  }
+
+  .skeletonInstructor {
+    height: 16px;
   }
 }
 
