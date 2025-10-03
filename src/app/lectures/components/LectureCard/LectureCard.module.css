@@ -39,6 +39,26 @@
   opacity: 0.5;
 }
 
+.myLectureBadge,
+.enrolledBadge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.myLectureBadge {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.enrolledBadge {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
 .content {
   flex: 1;
   display: flex;

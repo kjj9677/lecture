@@ -6,12 +6,14 @@ interface LectureListProps {
   lectures: Lecture[];
   selectedLectures: string[];
   onSelectionChange: (lectureId: string, selected: boolean) => void;
+  currentUserId?: string;
 }
 
 export default function LectureList({
   lectures,
   selectedLectures,
-  onSelectionChange
+  onSelectionChange,
+  currentUserId
 }: LectureListProps) {
   return (
     <div className={styles.grid}>
@@ -21,6 +23,7 @@ export default function LectureList({
           lecture={lecture}
           isSelected={selectedLectures.includes(lecture.id)}
           onSelectionChange={onSelectionChange}
+          currentUserId={currentUserId}
         />
       ))}
     </div>

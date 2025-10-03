@@ -9,17 +9,23 @@ interface LectureCardProps {
   lecture: Lecture;
   isSelected: boolean;
   onSelectionChange: (lectureId: string, selected: boolean) => void;
+  currentUserId?: string;
 }
 
 export default function LectureCard({
   lecture,
   isSelected,
   onSelectionChange,
+  currentUserId,
 }: LectureCardProps) {
   const isFullyBooked = lecture.currentStudents >= lecture.maxStudents;
   const enrollmentRate = lecture.currentStudents / lecture.maxStudents;
   const isAlmostFull =
     enrollmentRate >= ALMOST_FULL_THRESHOLD && !isFullyBooked;
+
+  const isMyLecture = currentUserId === lecture.instructorId;
+  const isEnrolled = lecture.applicants.some((s) => s === currentUserId);
+  const showBadge = isMyLecture || isEnrolled;
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onSelectionChange(lecture.id, e.target.checked);
@@ -28,14 +34,24 @@ export default function LectureCard({
   return (
     <div className={`${styles.card} ${isSelected ? styles.selected : ""}`}>
       <div className={styles.checkbox}>
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={handleCheckboxChange}
-          disabled={isFullyBooked}
-          className={styles.checkboxInput}
-          aria-label={`${lecture.title} 선택`}
-        />
+        {showBadge ? (
+          <span
+            className={
+              isMyLecture ? styles.myLectureBadge : styles.enrolledBadge
+            }
+          >
+            {isMyLecture ? "나의 강의" : "수강중"}
+          </span>
+        ) : (
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={handleCheckboxChange}
+            disabled={isFullyBooked}
+            className={styles.checkboxInput}
+            aria-label={`${lecture.title} 선택`}
+          />
+        )}
       </div>
 
       <div className={styles.content}>

@@ -18,7 +18,7 @@ import CreateLectureModal from "./components/CreateLectureModal";
 
 export default function LecturesPage() {
   const router = useRouter();
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const {
     lectures,
@@ -82,6 +82,7 @@ export default function LecturesPage() {
           lectures={lectures}
           selectedLectures={selectedLectures}
           onSelectionChange={handleSelectionChange}
+          currentUserId={user?.id}
         />
       )}
 
