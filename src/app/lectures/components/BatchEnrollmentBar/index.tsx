@@ -1,37 +1,52 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Text, Button } from "@/components/base";
 import { lectureApi } from "@/data/mockApi";
+import { useAuth } from "@/hooks/useAuth";
 import styles from "./BatchEnrollmentBar.module.css";
 
 interface BatchEnrollmentBarProps {
-  selectedCount: number;
   selectedLectureIds: string[];
   onEnrollmentSuccess: () => void;
   onClearSelection: () => void;
 }
 
 export default function BatchEnrollmentBar({
-  selectedCount,
   selectedLectureIds,
   onEnrollmentSuccess,
-  onClearSelection
+  onClearSelection,
 }: BatchEnrollmentBarProps) {
+  const router = useRouter();
+  const { isAuthenticated, user } = useAuth();
   const [isEnrolling, setIsEnrolling] = useState(false);
+
+  const selectedCount = selectedLectureIds.length;
 
   const handleBatchEnroll = async () => {
     if (selectedCount === 0) return;
+
+    if (!isAuthenticated) {
+      alert("로그인이 필요합니다.");
+      router.push("/login");
+      return;
+    }
+
+    if (user?.userType === "instructor") {
+      alert("강사는 수강 신청을 할 수 없습니다.");
+      return;
+    }
 
     setIsEnrolling(true);
 
     try {
       const results = await Promise.allSettled(
-        selectedLectureIds.map(lectureId =>
+        selectedLectureIds.map((lectureId) =>
           lectureApi.applyToLecture(lectureId)
         )
       );
 
       const successCount = results.filter(
-        result => result.status === 'fulfilled' && result.value.success
+        (result) => result.status === "fulfilled" && result.value.success
       ).length;
 
       const failedCount = selectedCount - successCount;

@@ -1,4 +1,6 @@
-import { Text } from "@/components/base";
+import { useRouter } from "next/navigation";
+import { Text, Button } from "@/components/base";
+import { useAuth } from "@/hooks/useAuth";
 import { LectureSortOption } from "@/types";
 import styles from "./LecturesHeader.module.css";
 
@@ -19,8 +21,36 @@ export default function LecturesHeader({
   sortOption,
   onSortChange
 }: LecturesHeaderProps) {
+  const router = useRouter();
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/login");
+  };
+
   return (
     <header className={styles.header}>
+      <div className={styles.topBar}>
+        <div className={styles.userInfo}>
+          <Text type="BODY_2" color="neutral" className={styles.userName}>
+            {user?.name}님
+          </Text>
+          <Text type="CAPTION" color="secondary" className={styles.userType}>
+            {user?.userType === "instructor" ? "강사" : "학생"}
+          </Text>
+        </div>
+        <Button
+          variant="outline"
+          size="small"
+          onClick={handleLogout}
+          className={styles.logoutButton}
+          ariaLabel="로그아웃"
+        >
+          로그아웃
+        </Button>
+      </div>
+
       <div className={styles.titleSection}>
         <Text type="HEADER_1" color="primary" as="h1">
           강의 목록

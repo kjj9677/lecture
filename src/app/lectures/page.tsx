@@ -1,92 +1,62 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { PageContainer } from "@/components/layout";
-import { lectureApi } from "@/data/mockApi";
 import { initializeMockData } from "@/data/initialData";
-import { Lecture, LectureSortOption } from "@/types";
+import { useAuth } from "@/hooks/useAuth";
+import { useLecturesPage } from "./hooks/useLecturesPage";
 import {
   LecturesHeader,
   LectureList,
   LoadingState,
   EmptyState,
-  BatchEnrollmentBar
+  ErrorState,
+  BatchEnrollmentBar,
 } from "./components";
 
 export default function LecturesPage() {
-  const [lectures, setLectures] = useState<Lecture[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [sortOption, setSortOption] = useState<LectureSortOption>("recent");
-  const [error, setError] = useState<string | null>(null);
-  const [selectedLectures, setSelectedLectures] = useState<string[]>([]);
-
-  const loadLectures = async (sort: LectureSortOption = sortOption) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const response = await lectureApi.getLectures({ sort });
-
-      if (response.success && response.data) {
-        setLectures(response.data);
-      } else {
-        setError(response.message || "강의 목록을 불러오는데 실패했습니다.");
-      }
-    } catch (err) {
-      setError("강의 목록을 불러오는 중 오류가 발생했습니다.");
-      console.error("Load lectures error:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSortChange = (newSortOption: LectureSortOption) => {
-    setSortOption(newSortOption);
-    loadLectures(newSortOption);
-  };
-
-  const handleSelectionChange = (lectureId: string, selected: boolean) => {
-    setSelectedLectures(prev => {
-      if (selected) {
-        return [...prev, lectureId];
-      } else {
-        return prev.filter(id => id !== lectureId);
-      }
-    });
-  };
-
-  const handleEnrollmentSuccess = () => {
-    loadLectures();
-  };
-
-  const handleClearSelection = () => {
-    setSelectedLectures([]);
-  };
+  const router = useRouter();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const {
+    lectures,
+    isLoading,
+    error,
+    sortOption,
+    selectedLectures,
+    handleSortChange,
+    handleSelectionChange,
+    handleEnrollmentSuccess,
+    handleClearSelection,
+  } = useLecturesPage();
 
   useEffect(() => {
-    const initialize = async () => {
-      await initializeMockData();
-      await loadLectures();
-    };
+    if (!authLoading && !isAuthenticated) {
+      router.push("/login");
+      return;
+    }
 
-    initialize();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (!authLoading && isAuthenticated) {
+      initializeMockData();
+    }
+  }, [authLoading, isAuthenticated, router]);
+
+  if (authLoading) {
+    return (
+      <PageContainer>
+        <LoadingState />
+      </PageContainer>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   if (error) {
     return (
       <PageContainer>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '200px',
-          textAlign: 'center',
-          color: '#dc2626',
-          fontSize: '16px'
-        }}>
-          {error}
-        </div>
+        <ErrorState message={error} />
       </PageContainer>
     );
   }
@@ -112,7 +82,6 @@ export default function LecturesPage() {
       )}
 
       <BatchEnrollmentBar
-        selectedCount={selectedLectures.length}
         selectedLectureIds={selectedLectures}
         onEnrollmentSuccess={handleEnrollmentSuccess}
         onClearSelection={handleClearSelection}
