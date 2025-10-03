@@ -27,7 +27,6 @@ export default function TabSelector({
           }`}
           onClick={() => onTabChange(tab.value)}
           aria-label={tab.label}
-          aria-selected={activeTab === tab.value}
         >
           <Text
             type="BODY_2"
